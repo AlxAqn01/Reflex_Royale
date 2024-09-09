@@ -1,0 +1,15 @@
+from gpiozero import Servo
+from time import sleep
+
+from gpiozero.pins.pigpio import PiGPIOFactory
+
+factory = PiGPIOFactory()
+# Initialize the servo on GPIO pin 14
+# min_pulse_width and max_pulse_width may need to be adjusted for your servo
+servo = Servo(14, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000, pin_factory=factory)
+
+servo.mid()
+sleep(2)
+servo.max()
+sleep(2)
+servo.value = None;
