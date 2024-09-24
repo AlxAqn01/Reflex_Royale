@@ -8,12 +8,10 @@ pygame.init()
 # Set up the display
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Servo Control Demo")
+pygame.display.set_caption("Simple Servo Control")
 
 # Set up colors
 WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
 
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
@@ -35,7 +33,8 @@ def set_servo_angle(angle):
 
 # Main game loop
 running = True
-current_angle = 90  # Start at middle position
+clock = pygame.time.Clock()
+start_time = pygame.time.get_ticks()
 
 try:
     while running:
@@ -43,32 +42,28 @@ try:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and current_angle > 0:
-                    current_angle -= 10
-                elif event.key == pygame.K_RIGHT and current_angle < 180:
-                    current_angle += 10
-                set_servo_angle(current_angle)
 
         # Clear the screen
         screen.fill(WHITE)
 
-        # Draw a line to represent servo position
-        line_start = (WIDTH // 2, HEIGHT // 2)
-        angle_rad = pygame.math.Vector2().from_polar((100, -current_angle + 90))
-        line_end = (line_start[0] + angle_rad.x, line_start[1] + angle_rad.y)
-        pygame.draw.line(screen, RED, line_start, line_end, 5)
-
-        # Draw text to show current angle
-        font = pygame.font.Font(None, 36)
-        text = font.render(f"Angle: {current_angle}", True, BLACK)
-        screen.blit(text, (10, 10))
-
         # Update the display
         pygame.display.flip()
 
+        # Control servo based on time
+        current_time = pygame.time.get_ticks()
+        elapsed_time = (current_time - start_time) / 1000  # Convert to seconds
+
+        if elapsed_time < 1:
+            set_servo_angle(0)
+        elif 1 <= elapsed_time < 3:
+            set_servo_angle(90)
+        elif 3 <= elapsed_time < 5:
+            set_servo_angle(0)
+        elif elapsed_time >= 5:
+            start_time = current_time  # Reset the cycle
+
         # Control the frame rate
-        pygame.time.Clock().tick(60)
+        clock.tick(30)
 
 finally:
     pwm.stop()
