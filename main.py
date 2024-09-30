@@ -14,8 +14,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 # Define GPIO pins for buttons and LEDs
-player1_buttons = {'RED': 17, 'YELLOW': 27, 'GREEN': 3, 'WHITE': 4, 'BLUE': 2}
-player1_leds = {'RED': 23, 'YELLOW': 24, 'GREEN': 15, 'WHITE': 18, 'BLUE': 14}
+player1_buttons = {'RED': 11, 'YELLOW': 0, 'GREEN': 10, 'WHITE': 9, 'BLUE': 22}
+player1_leds = {'RED': 8, 'YELLOW': 7, 'GREEN': 24, 'WHITE': 25, 'BLUE': 23}
 player2_buttons = {'RED': 26, 'YELLOW': 19, 'GREEN': 13, 'WHITE': 6, 'BLUE': 5}
 player2_leds = {'RED': 21, 'YELLOW': 20, 'GREEN': 16, 'WHITE': 12, 'BLUE': 1}
 
