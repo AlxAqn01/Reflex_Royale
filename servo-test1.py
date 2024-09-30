@@ -1,6 +1,6 @@
 import pygame
 import RPi.GPIO as GPIO
-import time
+from button import Button
 
 # Initialize Pygame
 pygame.init()
@@ -15,12 +15,16 @@ WHITE = (255, 255, 255)
 
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
-SERVO_PIN = 18
+SERVO_PIN = 27
 GPIO.setup(SERVO_PIN, GPIO.OUT)
 
 # Set up PWM for servo
 pwm = GPIO.PWM(SERVO_PIN, 50)  # 50 Hz frequency
 pwm.start(0)
+
+start_img = pygame.image.load('assets/start_but.png').convert_alpha()
+start_button = Button(100,400, start_img, 1)
+but_pressed = False
 
 # Function to set servo angle
 def set_servo_angle(angle):
@@ -48,19 +52,15 @@ try:
 
         # Update the display
         pygame.display.flip()
+        
 
-        # Control servo based on time
-        current_time = pygame.time.get_ticks()
-        elapsed_time = (current_time - start_time) / 1000  # Convert to seconds
-
-        if elapsed_time < 1:
-            set_servo_angle(0)
-        elif 1 <= elapsed_time < 3:
-            set_servo_angle(90)
-        elif 3 <= elapsed_time < 5:
-            set_servo_angle(0)
-        elif elapsed_time >= 5:
-            start_time = current_time  # Reset the cycle
+        if start_button.draw(screen):
+            if not but_pressed:
+                set_servo_angle(0)
+                but_pressed = True
+            else: 
+                set_servo_angle(90)
+                but_pressed = False
 
         # Control the frame rate
         clock.tick(30)
